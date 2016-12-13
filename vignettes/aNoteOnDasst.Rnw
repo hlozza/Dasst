@@ -1,0 +1,242 @@
+\documentclass{article}
+% \VignetteIndexEntry{A note on Dasst}
+
+\usepackage{graphicx}
+\usepackage[colorlinks=true,urlcolor=blue]{hyperref}
+\usepackage{color}
+
+
+\usepackage{Sweave}
+\newcommand{\strong}[1]{{\normalfont\fontseries{b}\selectfont #1}}
+\let\pkg=\strong
+\newcommand{\code}[1]{\texttt{\small #1}}
+\newcommand{\proglang}[1]{\textsf{\bf #1}}
+
+
+\title{A note on `Dasst' package for  working with `\textsc{dssat-csm}' files}
+\author{Homero Lozza}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+The `\textsc{dssat-csm}'~\cite{dssat-v402} writes many of its variable values in text files using fixed width format (\textsc{fwf}). These files typically have \texttt{.OUT} extension. In addition, input data must also be formatted in columns of fixed width~\cite{dssat-vol2}.  
+
+The \pkg{Dasst} package provides `\textsc{dssat}' users with methods for easy accessing the values on `\textsc{dssat}' files. It enables simulated treatments to be prepared and studied with numerous tools available in \proglang{R} for statistical and graphical analyses.
+
+\section{Processing a \texttt{.OUT} file}
+
+The first step is to read the required \texttt{.OUT} file and to store it in memory as an S4 object of class \code{Dasst}. We delivered some example files on the \texttt{extdata} directory of the \pkg{Dasst} installation. In order to perform the following examples, we will read the \texttt{PlantGro.OUT} file which contains the daily plant growth for 3 treatments repeated over 10 years. Runs ranging from 1 to 10 have plant output data for treatment 1 which simulates the growth of a maize from 1970 to 1979 (south hemisphere). Treatment 2 is analogous to the previous one, but adds a fertilization with 50kg/ha of urea. Lastly, treatment 3 adds a fertilization with 100kg/ha of urea.
+
+The \code{read.dssat} function can be invoked passing a vector of characters with the file name/names to be opened. Also other arguments are accepted to restrict the number of fields to be retrieved. See help for more details. 
+
+%library(Dasst, lib.loc="/home/lozza/GeoStatistics/")
+
+<<eval=TRUE,echo=TRUE>>=
+library(Dasst)
+dssatfile <- system.file("extdata","PlantGro.OUT",package="Dasst")
+plantgro <- read.dssat(dssatfile)
+@
+%options(digits=2)
+
+The same data set is available and can be load by means of
+
+<<eval=TRUE,echo=TRUE>>=
+data(plantGrowth)
+@
+
+The S4 object stores internally the values immediately bellow each header line of the text file as a \code{data.frame}. Each \code{data.frame} is identified with a table. 
+
+<<eval=TRUE,echo=TRUE>>=
+length(plantGrowth)
+@
+
+In this case, we count with \Sexpr{length(plantGrowth)} tables. This means that this was the number of headers found in the text file.
+
+The \code{show} method displays the contents of the first table stored in an object of class \code{Dasst}. The \code{summary} method gives a brief report of the information stored in the \code{Dasst} object, and gives the number of fields and records for each table. 
+
+<<eval=TRUE,echo=TRUE>>=
+summary(plantGrowth)
+@
+
+Each table contents is accessed by the \code{[} method. Specific values can be set by rows, column names, or a combination of both.  For example, the value for the \texttt{"YEAR"} field on row \texttt{1} corresponding to table \texttt{1} is
+  
+<<eval=TRUE,echo=TRUE>>=
+plantGrowth[1][1,"YEAR"]
+@
+
+\subsection{Dates processing}
+
+The conversion from year (\texttt{YEAR}) and day of the year (\texttt{DOY}) is perform by \code{as.Date<-} method. It stores dates as \code{Date} objects in a new column named \texttt{date\_YEAR\_DOY}. 
+
+<<eval=TRUE,echo=TRUE>>=
+as.Date(plantGrowth) <- ~ YEAR + DOY
+plantGrowth[1][1:3,c("YEAR","DOY","date_YEAR_DOY")]
+@ 
+
+This turns very simply the sketch of evolution curves.  
+
+<<echo=TRUE,print=FALSE,fig=FALSE>>=
+plot(plantGrowth[1][,"date_YEAR_DOY"],plantGrowth[1][,"LAID"])
+@ 
+
+\begin{figure}[htb!]
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>=
+plot(plantGrowth[1][,"date_YEAR_DOY"],plantGrowth[1][,"LAID"])
+@ 
+\end{center}
+\caption{Daily evolution of \texttt{LAID}.}
+\label{fig:laidEvol}
+\end{figure}
+
+
+\subsection{Mean operation}
+
+Several operations can be performed over the whole data set or restricted to a subset. We could be interested on computing the mean, variance, maximum, or minimum values per treatment. In the following example, we will compute the mean values of stem, leaf and grain weight for each day after planting (\texttt{DAP}) for treatment 1 that spans runs from 1 to 10: 
+
+<<eval=TRUE,echo=TRUE>>=
+from01to10 <- gatherTables(plantGrowth, 1:10, c("DAP"),
+                           c("SWAD","LWAD","GWAD"), mean)
+lastRow <- nrow(from01to10)
+from01to10[(lastRow-5):lastRow,]
+@ 
+
+The result is stored in a \code{data.frame} which can be manipulated and plotted with standard tools:
+
+<<echo=TRUE,print=FALSE,fig=FALSE>>=
+plot(SWAD + LWAD + GWAD ~ DAP, data=from01to10)
+@ 
+
+\begin{figure}[htb!]
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>=
+plot(SWAD + LWAD + GWAD ~ DAP, data=from01to10)
+@ 
+\end{center}
+\caption{Mean daily evolution of the sum of stem, leaf and grain weight.}
+\label{fig:meanEvol}
+\end{figure}
+
+
+\subsection{Yield plots}
+
+Yield may be retrieved from the last row for each run of the \texttt{PlantGro.OUT} file. However, we will read the \texttt{Summary.OUT} file available from the \texttt{extdata} directory in the \pkg{Dasst} installation.
+
+
+<<eval=TRUE,echo=TRUE>>=
+smmyfile <- system.file("extdata","Summary.OUT",package="Dasst")
+smmy <- read.dssat(smmyfile)
+summary(smmy)
+@
+
+From the summary information we notice that the \code{smmy} object contains only 30 records gather in table 1. This corresponds to the 10 years of simulations for each of the 3 treatments simulated. 
+
+
+<<echo=TRUE,print=FALSE,fig=FALSE>>=
+boxplot(HWAM ~ TRNO, data=smmy[1])
+@  
+
+\begin{figure}[htb!]
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+boxplot(HWAM ~ TRNO, data=smmy[1])
+@
+\end{center}
+\caption{Yield box plot. Treatments; 1: without fertilization, 2: with 50kg/ha of urea, 3: with 100kg/ha of urea.}
+\label{fig:yields}
+\end{figure}
+
+\clearpage
+
+\section{Stacking files}
+
+On certain occasions, you could be interested in time series that span across several tables. For example, when `\textsc{dssat-csm}' is executed in sequence mode, soil water values corresponding to the \emph{N run} go on \emph{N+1 run}. Here, we will address the generation of time series from \texttt{.WTH} files.
+
+We will read the \texttt{.WTH} files available from the \texttt{extdata} directory in the \pkg{Dasst} installation.
+
+<<eval=TRUE,echo=TRUE>>=
+wthPath <- paste(find.package("Dasst"),"extdata",sep="/")
+wthFiles <- list.files(path=wthPath, pattern="WTH", full.names=TRUE)
+wth <- read.dssat(wthFiles)
+summary(wth)
+@
+
+From the summary information we notice that the \code{wth} object contains 22 tables. We found 365 or 366 records on half of them according to the year. Interestingly, the small tables with only 1 record stores the climatic information which in the \texttt{.WTH} files looks like
+
+\begin{verbatim}
+  INSI      LAT     LONG  ELEV   TAV   AMP  TMHT  WMHT
+        -34.071  -60.304   -99  16.5  12.0   2.0   -99
+\end{verbatim}
+
+In order to obtain the full time series, we will stack only the even table numbers
+
+<<eval=TRUE,echo=TRUE>>=
+wthSeries <- stackTables(wth, seq(from=2, to=22, by=2))
+@
+
+The result is available as \code{data.frame}.
+
+<<echo=TRUE,print=FALSE,fig=FALSE>>=
+plot(TMAX ~ as.Date(as.character(DATE),format="%y%j"), wthSeries)
+@  
+
+
+\begin{figure}[htb!]
+\begin{center}
+<<echo=FALSE,print=FALSE,fig=TRUE>>= 
+plot(TMAX ~ as.Date(as.character(DATE),format="%y%j"), wthSeries)
+@
+\end{center}
+\caption{Daily maximum temperature series.}
+\label{fig:wthSeries}
+\end{figure}
+
+
+\section{Input file edition}
+
+This section gives a brief idea of the potential of \code{write.dssat} method for the edition of \textsc{dssat-csm} input files. Further details can be found in other vignette aimed at automatic calibration and optimization of `\textsc{dssat-csm}' input files.
+
+We will read the experimental file \texttt{SANT7001.MZX} and we will replace the fertilization doses. Because this file will be replaced, we make a copy on our working directory.
+
+<<eval=TRUE,echo=TRUE>>=
+santfile <- system.file("extdata","SANT7001.MZX",package="Dasst")
+file.copy(santfile, "SANT7001.MZX")
+sant <- read.dssat("SANT7001.MZX")
+sant[9]
+sant[9][,"FAMN"] <- c(60,120)
+sant[9]
+write.dssat(sant)
+@
+%options(digits=2)
+
+The \texttt{SANT7001.MZX} was rewritten and the original file was saved as \texttt{SANT7001.MZX.bak}.
+
+
+\section{Known issues}
+
+Sections that do not contain values are skipped, and there will not be tables representing these names. Moreover, comments are also skipped and will not be found in their corresponding files if \code{write.dssat} method is applied. In addition, some details that may be found between the section name and the variables header will be skipped. In general, verbose reduction does not affect the program behavior because merely comments are erased. 
+
+The column widths are computed from the space reserved in header lines for each field. Each variable header is assumed to be right justified. The column widths are computed as the number of characters (including blanks) spanning from the last character of the previous word up to the end of the following variable name. Thus, header lines containing variable names with spaces in between are misunderstand. Eventually, headers from such a file should be edited and spaces should be replaced by underscores.        
+
+The type of value is detected automatically. Fields are assumed numeric if only figures, dots, pluses or minuses are found. Otherwise they are considered as a character strings. Sometimes, the columns for character fields are left justified. This adds some difficulties in the column width detection. To fix some misalignment, extend the variable name with underscores up to one space before the beginning of the following column header. 
+
+
+\section{Conclusion}
+
+In conclusion, this package tends to simplify the post processing of `\textsc{dssat}' simulated values stored in \texttt{.OUT} files offering methods that expose these data as belonging to a collection of \code{data.frame} objects that can be thought like tables.   
+ 
+
+\begin{thebibliography}{99}
+
+\bibitem{dssat-v402} Jones, J.W., G. Hoogenboom, C.H. Porter, K.J. Boote, W.D. Batchelor, L.A. Hunt, P.W. Wilkens, U. Singh, A.J. Gijsman, and J.T. Ritchie. 2003. DSSAT Cropping System Model. European Journal of Agronomy 18:235-265
+
+\bibitem{dssat-vol2} G.Y. Tsuji, G. Uehara and S. Balas (eds.). 1994. DSSAT v3 (Volume 2). University of Hawaii, Honolulu, Hawaii.
+
+
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,47 @@
+*MAIZE CULTIVAR COEFFICIENTS: GECER040 MODEL
+!
+!The P1 values for the varieties used in experiments IBWA8301 and
+!UFGA8201 were recalibrated to obtain a better fit for version 3
+!of the model. After converting from 2.1 to 3.0 the varieties
+!IB0035, IB0060, and IB0063 showed an earlier simulated flowering
+!date. To correct this, the P1 values were recalibrated.
+!The reason for this is that there was an error in PHASEI in
+!version 2.1 that had TLNO=IFIX(CUMDTT/21.+6.) rather than
+!TLNO=IFIX(SUMDTT/21.+6.); see p. 74 of Jones & Kiniry.
+!-Walter Bowen, 22 DEC 1994.
+!
+!All G2 values were increased by a factor of 1.1 for Ritchie's
+!change to RUE -Walter, 28 DEC 1994
+!
+! COEFF       DEFINITIONS
+! ========    ===========
+! VAR#        Identification code or number for a specific cultivar
+! VAR-NAME    Name of cultivar
+! ECO#        Ecotype code or this cultivar, points to the Ecotype in the
+!             ECO file (currently not used).
+! P1          Thermal time from seedling emergence to the end of the juvenile
+!             phase (expressed in degree days above a base temperature of 8øC)
+!             during which the plant is not responsive to changes in
+!             photoperiod.
+! P2          Extent to which development (expressed as days) is delayed for
+!             each hour increase in photoperiod above the longest photoperiod
+!             at which development proceeds at a maximum rate (which is
+!             considered to be 12.5 hours).
+! P5          Thermal time from silking to physiological maturity (expressed
+!             in degree days above a base temperature of 8øC).
+! G2          Maximum possible number of kernels per plant.
+! G3          Kernel filling rate during the linear grain filling stage and
+!             under optimum conditions (mg/day).
+! PHINT       Phylochron interval; the interval in thermal time (degree days)
+!             between successive leaf tip appearances.
+!
+! PIO         Pioneer
+! AS          Asgrow (Monsanto)
+! DK          Dekalb (Monsanto)
+! 
+@VAR#  VRNAME..........   ECO#    P1    P2    P5    G2    G3 PHINT
+!                                  1     2     3     4     5     6
+990001 LONG SEASON      IB0001 320.0 0.520 940.0 620.0  6.00 38.90
+990002 MEDIUM SEASON    IB0001 200.0 0.300 800.0 700.0  8.50 38.90
+990003 SHORT SEASON     IB0001 110.0 0.300 680.0 820.4  6.60 38.90
+990004 V.SHORT SEASON   IB0001   5.0 0.300 680.0 820.4  6.60 38.90
