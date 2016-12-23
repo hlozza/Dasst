@@ -4,6 +4,9 @@ Date: 2016-12-13
 Title: Tools for reading, processing and writing DSSAT files
 Authors@R: c(person("Homero", "Lozza", role = c("aut", "cre"),
     email = "homerolozza@gmail.com"))
+Author: Homero Lozza [aut, cre]
+Maintainer: Homero Lozza <homerolozza@gmail.com>
+Depends: R (>= 2.14.0) 
 Description: The Dasst (Dssat AS Simple Tables) 
     package provides methods for reading, displaying, 
     processing and writing files originally formatted 
