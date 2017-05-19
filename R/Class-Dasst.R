@@ -1,5 +1,8 @@
-### methods setClass setGeneric setMethod setRefClass
+### import from methods package
+##' @importFrom methods as new slot slot<- slotNames validObject
 ##' @importFrom methods setClass setGeneric setMethod setReplaceMethod setAs
+### import from stat package
+##' @importFrom stats model.frame
 NULL
 
 ##' Dasst class description

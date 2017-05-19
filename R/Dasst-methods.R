@@ -93,7 +93,6 @@ print.Dasst <- function(x, ix=1, ...){
 ##' @name show
 ##' @rdname Dasst-show
 ##' @aliases show,Dasst-method
-##' @exportMethod show
 ##'
 ##' @examples
 ##' 
@@ -288,6 +287,7 @@ length.Dasst <- function(x){ length(x@tables)}
 ##' @seealso \code{\link{length.Dasst}}
 ##' 
 ##' @usage \method{length}{Dasst} (x) <- value
+##' @method length<- Dasst
 ##' @export
 ##'
 ##' @examples
