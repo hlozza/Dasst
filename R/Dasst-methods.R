@@ -819,3 +819,235 @@ setReplaceMethod(
 
 
 
+##' Get ancillary data from an object of
+##' class \code{\linkS4class{Dasst}}
+##'
+##' \code{getAncillary} gets ancillary data from an object
+##' of class \code{\linkS4class{Dasst}} connected to the selected
+##' table orders.
+##'
+##' This method gets ancillary data from an object
+##' of class \code{\linkS4class{Dasst}} connected to the selected
+##' table orders.
+##' Values are arranged in tables, and the order is the number
+##' assigned succesively to each of them after the data
+##' have been stored within the \code{\linkS4class{Dasst}} object.
+##' \code{getAncillary} provides ancillary data 
+##' such as the file name which was originally read, and the section
+##' and the header which introduced the values within the file. 
+##'
+##' @param x An object of class \code{\linkS4class{Dasst}}.
+##' @param i An optional integer vector.
+##' Orders where to retrieve ancillary data. The default action is
+##' to retrieve all the available ancillary data.
+##' @return An object of class Ancillary which contains 
+##' the retrieved ancillary data for the selected table orders.
+##'
+##' @export getAncillary
+##' @name getAncillary
+##' @docType methods
+##' @rdname getAncillary-methods
+##'
+##' @examples
+##' 
+##' data(plantGrowth)
+##' getAncillary(plantGrowth, c(1,3,5))
+##'
+###if(!isGeneric("getAncillary")){
+setGeneric(name = "getAncillary", def = function(x, i){standardGeneric("getAncillary")} )
+###}
+
+##' @rdname getAncillary-methods
+##' @aliases getAncillary,Dasst,numeric-method
+##' @exportMethod getAncillary
+##'
+setMethod(
+          f="getAncillary",
+          signature=c(x="Dasst", i="numeric"),
+          definition=function(x, i){
+
+            # Just in case 
+            # Restrict indices to actual table orders
+            index <- i[i >= 1 & i <= length(x)]
+            
+            obj <- list()
+            obj[["orders"]]   <- index
+            obj[["files"]]    <- x@fileNames[index]
+            obj[["sections"]] <- x@sections[index]
+            obj[["columns"]]  <- vapply(x@tables[index], function(x)
+                                        paste(names(x), collapse=" "), "")
+            class(obj) <- "Ancillary"
+            obj
+            
+          }
+          )
+
+
+##' @rdname getAncillary-methods
+##' @aliases getAncillary,Dasst,missing-method
+##' @exportMethod getAncillary
+##'
+setMethod(
+          f="getAncillary",
+          signature=c(x="Dasst", i="missing"),
+          definition=function(x, i){
+
+            return(getAncillary(x,1:length(x)))
+          }
+          )
+
+##' Print object of class \code{Ancillary}
+##'
+##' \code{print.Ancillary} prints the contents of an object
+##' of class \code{Ancillary}.
+##'
+##' This function extends the S3 \code{\link{print}} generic function. 
+##' It prints the contents of an object of class \code{Ancillary}.
+##'
+##' @param x Object of class \code{Ancillary}.
+##' @param ... Arguments that may be passed to other functions.
+##' @return An invisible object.
+##'
+##' @method print Ancillary
+##' @export
+##'
+##' @examples
+##' 
+##' data(plantGrowth)
+##' getAncillary(plantGrowth, 1:5)
+##'
+print.Ancillary <- function(x, ...){
+
+  if(length(x[["orders"]]) == 0){
+
+    cat("* No ancillary data for selected table orders.\n")
+    
+  }else{
+
+    cat("* Showing ancillary data for selected table orders:\n")
+
+    colLimit <- 18
+    
+    cat(format("Orders:", width=colLimit), " ")
+    cat(format("Files:", width=colLimit), " ")
+    cat(format("Sections:", width=colLimit), " ")
+    cat(format("Columns:", width=colLimit), " \n")
+
+    rowLimit <- 15
+    nrow <- min(rowLimit, length(x[["orders"]]))
+
+    for(i in 1:nrow){
+
+      for(cmps in names(x)){
+
+        cval <- x[[cmps]][i]
+        # Trim trailing whitespace
+        if(is.character(cval)){
+          cval <- sub("\\s+$", "", cval)
+        }
+        
+        if(nchar(cval) <= colLimit){
+
+          cat(format(cval, width=colLimit), " ")
+          
+        }else{
+          
+          cat(strtrim(cval, colLimit-3), "... ")
+          
+        }
+        
+      }
+      
+      cat("\n")
+      
+    }
+    
+    if(rowLimit < length(x[["orders"]])){
+      cat("\n")
+      cat("... Print limitted to the first ", rowLimit, " rows.\n")
+    }
+    cat("\n")
+    cat("For more, ancillary_object[[<name>]]; ")
+    cat("<name>: orders|files|sections|columns.\n")
+    
+  }
+  
+  invisible(x)
+}
+
+
+##' Search for ancillary data within the \code{\linkS4class{Dasst}} object
+##'
+##' \code{searchAncillary} looks for ancillary data that satisfies
+##' the search criteria
+##' and gives the table orders in the \code{\linkS4class{Dasst}} object
+##' for succesful results. 
+##'
+##' This method searches for character strings or regular expressions
+##' in the ancillary data of the \code{\linkS4class{Dasst}} object.
+##' Patterns are sought into "fileNames" and "sections" slots, and
+##' table column names. The corresponding table orders whose ancillary data
+##' satisfied the search criteria are gathered in a vector.
+##'
+##' @param x An object of class \code{\linkS4class{Dasst}}.
+##' @param fileKey A character string. Search for this pattern within
+##' the "filename" slot.
+##' @param secKey A character string. Search for this pattern within
+##' the "section" slot.
+##' @param colKey A character string. Search for this pattern within
+##' the tables column names.
+##' @param ... Other parameters than may be passed to grepl.
+##' @return An integer representing the table orders whose ancillary data
+##' satisfied the search criteria.
+##'
+##' @export searchAncillary
+##' @name searchAncillary
+##' @docType methods
+##' @rdname searchAncillary-methods
+##'
+##' @examples
+##' 
+##' data(plantGrowth)
+##' searchAncillary(plantGrowth, sectionKey="RUN 1")
+##'
+###if(!isGeneric("searchAncillary")){
+setGeneric(name = "searchAncillary", def = function(x, fileKey="", secKey="", colKey="", ...){standardGeneric("searchAncillary")} )
+###}
+
+##' @rdname searchAncillary-methods
+##' @aliases searchAncillary,Dasst,character,character,character-method
+##' @exportMethod searchAncillary
+##'
+setMethod(
+          f="searchAncillary",
+          signature=c(x="Dasst"),
+          definition=function(x, fileKey, secKey, colKey, ...){
+
+            if(length(x) == 0){
+              cat("Warning: Object of length 0.\n")
+              return(numeric(0))
+            }
+            
+            index <- 1:length(x)
+            fileOrders <- grepl(fileKey, x@fileNames, ...)
+            index <- index[fileOrders]
+            
+            if(any(fileOrders)){
+              
+              secOrders <- grepl(secKey, x@sections[fileOrders], ...)
+              index <- index[secOrders]
+              
+              if(any(secOrders)){
+                
+                colNames <- vapply(x@tables[secOrders],function(x)
+                       paste(names(x), collapse=" "), "")
+                colOrders <- grepl(colKey, colNames, ...)
+                return(index[colOrders])
+                
+              }
+            }
+            
+            return(numeric(0))
+          }
+          )
+
