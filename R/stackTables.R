@@ -2,19 +2,16 @@
 ##'
 NULL
 
-##' Stack tables from object of class Dasst
+##' Stack the tables of an object of class Dasst
 ##'
-##' \code{stackTables} stacks the selected tables of an object
+##' \code{stackTables} stacks the tables of an object
 ##' of class \code{\linkS4class{Dasst}}.
 ##'
-##' This function  stacks the selected tables of an object
+##' This function  stacks the tables of an object
 ##' of class \code{\linkS4class{Dasst}}.
 ##' The result is given as a \code{\link{data.frame}}.
 ##'
 ##' @param object Object of class \code{\linkS4class{Dasst}}.
-##' @param indices An integer vector. A vector with the position
-##'  of the tables which will be stacked.
-##'  Values range form 1 to \code{length(x)}.
 ##' @return A \code{\link{data.frame}} composed of the stacked tables.
 ##'
 ##' @export
@@ -22,33 +19,32 @@ NULL
 ##' @examples
 ##' 
 ##' data(plantGrowth)
-##' nrow(plantGrowth[1])
-##' nrow(plantGrowth[2])
-##' plantgro12 <- stackTables(plantGrowth, c(1,2))
+##' nrow(plantGrowth[[1]])
+##' nrow(plantGrowth[[2]])
+##' plantgro12 <- stackTables(plantGrowth[1:2])
 ##' nrow(plantgro12)
 ##'
-stackTables <- function(object, indices){
+stackTables <- function(object){
 
   ## check object and indices type
 
   if(class(object) != "Dasst"){
     cat("Error: ", deparse(substitute(object)), " is not of class Dasst.\n")
-    return(NULL)
+    return(data.frame())
   }
 
-  if(!is.numeric(indices)){
-    cat("Error: indices must be integers in the range from 1 to ", length(object@tables), "\n")
-    return(NULL)
-  }
-
-  if(length(indices) == 1){
-    index <- indices[1]
-    return(object[index])
-  }else if(all(indices > 0) && all(indices <= length(object)) ){
-    return(do.call(rbind,as(object,"list")[indices]))
+  if(length(object) == 0){
+    
+    return(data.frame())
+    
+  }else if(length(object) == 1){
+    
+    return(object[[1]])
+    
   }else{
-    cat("Error: indices must be integers in the range from 1 to ", length(object@tables), "\n")
-    return(NULL)
+    
+    return(do.call(rbind, as(object,"list")))
+    
   }
 }
 

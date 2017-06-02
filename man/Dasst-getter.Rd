@@ -1,8 +1,8 @@
 \docType{methods}
-\name{[}
-\alias{[}
-\alias{[,Dasst,numeric-method}
-\title{"[" method for class Dasst}
+\name{[[}
+\alias{[[}
+\alias{[[,Dasst,numeric-method}
+\title{"[[" method for class Dasst}
 \arguments{
   \item{x}{An object of class \code{\linkS4class{Dasst}}.}
 
@@ -14,8 +14,8 @@
   \code{\link{data.frame}}.
 }
 \description{
-  \code{"["} gets the contents of a table from an object of
-  class \code{\linkS4class{Dasst}}.
+  \code{"[["} gets the contents of a table from an object
+  of class \code{\linkS4class{Dasst}}.
 }
 \details{
   This method gets the contents of the selected table
@@ -26,11 +26,11 @@
 }
 \examples{
 data(plantGrowth)
-class(plantGrowth[1])
-plantGrowth[1]
-plantGrowth[1][1:10,]
+class(plantGrowth[[1]])
+plantGrowth[[1]]
+plantGrowth[[1]][1:10,]
 }
 \seealso{
-  \code{\link{[<-}}
+  \code{\link{[[<-}}
 }
 

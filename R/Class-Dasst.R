@@ -22,7 +22,7 @@ NULL
 ##'       the actual values retrieved from the original file.}
 ##'  }
 ##'
-##' @seealso \code{\link{show}}, \code{\link{summary}},
+##' @seealso \code{\link{show}}, \code{\link{summary}}, \code{\link{[[}}
 ##' \code{\link{[}} methods for content description, and
 ##' \code{\link{read.dssat}} function
 ##' for reading files. For other available methods

@@ -10,7 +10,7 @@
 ##' both for the inputs and the outputs. Several methods are available.
 ##'
 ##' @seealso \linkS4class{Dasst} for class definition,
-##' \code{\link{show}}, \code{\link{summary}},
+##' \code{\link{show}}, \code{\link{summary}}, \code{\link{[[}}
 ##' \code{\link{[}} methods for content description, and
 ##' \code{\link{read.dssat}} function
 ##' for reading files. For other available methods

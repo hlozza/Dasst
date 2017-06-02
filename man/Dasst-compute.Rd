@@ -1,7 +1,7 @@
 \docType{methods}
 \name{compute<-}
 \alias{compute<-}
-\alias{compute<-,Dasst,character,ANY,character-method}
+\alias{compute<-,Dasst,character,character-method}
 \title{Compute within columns from an object of class \code{\linkS4class{Dasst}}.}
 \arguments{
   \item{x}{An object of class \code{\linkS4class{Dasst}}.}
@@ -9,14 +9,11 @@
   \item{cocol}{A character string. The name of the new
   column field.}
 
-  \item{ix}{An optional integer vector. The subset tables
-  to be processed.}
-
   \item{value}{A character string. An expression to compute
   within column fields.}
 }
 \value{
-  The actual object.
+  The actual object of class \code{\linkS4class{Dasst}}.
 }
 \description{
   \code{compute<-} computes an expression using the columns
@@ -28,6 +25,9 @@
   belonging to the object of class
   \code{\linkS4class{Dasst}}. The result is stored as a new
   column table.
+
+  So far, the new column will not be saved if the write
+  method is invoked.
 }
 \examples{
 data(plantGrowth)

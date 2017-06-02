@@ -334,7 +334,15 @@ length.Dasst <- function(x){ length(x@tables)}
 setAs("Dasst", "list", function(from) from@tables)
 
 validRange <- function(i, imin, imax){
-  if(length(i) > 1){
+
+  if(imax == 0){
+    cat("Error: Object of length 0 with no contents.\n")
+    return(FALSE)
+  }else if(length(i) == 0){
+    cat("Error: Index argument out of bounds.\n")
+    cat("Choose a table in the range from ", imin, " to ", imax, ".\n")
+    return(FALSE)
+  }else if(length(i) > 1){
     cat("Error: Vector indexing is not allow.\n")
     cat("Choose a table in the range from ", imin, " to ", imax, ".\n")
     return(FALSE)
@@ -348,9 +356,9 @@ validRange <- function(i, imin, imax){
 }
 
 
-##' "[" method for class Dasst
+##' "[[" method for class Dasst
 ##'
-##' \code{"["} gets the contents of a table from
+##' \code{"[["} gets the contents of a table from
 ##' an object of class \code{\linkS4class{Dasst}}.
 ##'
 ##' This method gets the contents of the selected table stored
@@ -363,36 +371,36 @@ validRange <- function(i, imin, imax){
 ##' @return The values retrieved from the table at position i
 ##'  as \code{\link{data.frame}}.
 ##'
-##' @seealso \code{\link{[<-}}
+##' @seealso \code{\link{[[<-}}
 ##'
-##' @name [
+##' @name [[
 ##' @docType methods
 ##' @rdname Dasst-getter
-##' @aliases [,Dasst,numeric-method
-##' @exportMethod [
+##' @aliases [[,Dasst,numeric-method
+##' @exportMethod [[
 ##'
 ##' @examples
 ##' 
 ##' data(plantGrowth)
-##' class(plantGrowth[1])
-##' plantGrowth[1]
-##' plantGrowth[1][1:10,]
+##' class(plantGrowth[[1]])
+##' plantGrowth[[1]]
+##' plantGrowth[[1]][1:10,]
 ##'
 setMethod(
-          f="[",
+          f="[[",
           signature=c(x="Dasst",i="numeric"),
           definition=function(x,i){
             if(validRange(i, 1, length(x@tables))){
               return(x@tables[[i]])
             }else{
-              return(NULL)
+              return(data.frame())
             }
           }
           )
 
-##' "[<-" method for class \code{\linkS4class{Dasst}}
+##' "[[<-" method for class \code{\linkS4class{Dasst}}
 ##'
-##' \code{"[<-"} sets the contents of a table
+##' \code{"[[<-"} sets the contents of a table
 ##' from an object of class \code{\linkS4class{Dasst}}.
 ##'
 ##' This method sets the contents of the selected table stored
@@ -405,39 +413,39 @@ setMethod(
 ##' @param value Any Values to be stored at the given position. 
 ##' @return The actual object of class \code{\linkS4class{Dasst}}.
 ##'
-##' @seealso \code{\link{[}}
+##' @seealso \code{\link{[[}}
 ##'
-##' @name [<-
+##' @name [[<-
 ##' @docType methods
 ##' @rdname Dasst-setter
-##' @aliases [<-,Dasst,numeric-method
-##' @exportMethod [<-
+##' @aliases [[<-,Dasst,numeric-method
+##' @exportMethod [[<-
 ##'
 ##' @examples
 ##' 
 ##' # Add a row of NA at the end of the table 1
 ##' data(plantGrowth)
-##' rmax <- nrow(plantGrowth[1])
-##' plantGrowth[1][rmax + 1, ] <- NA
+##' rmax <- nrow(plantGrowth[[1]])
+##' plantGrowth[[1]][rmax + 1, ] <- NA
 ##'
 ##' # Edit a subset
-##' plantGrowth[1][131:132,2:4]
-##' plantGrowth[1][131:132,2:4] <- matrix(rep(100,6),nrow=2)
-##' plantGrowth[1][131:132,2:4]
+##' plantGrowth[[1]][131:132,2:4]
+##' plantGrowth[[1]][131:132,2:4] <- matrix(rep(100,6),nrow=2)
+##' plantGrowth[[1]][131:132,2:4]
 ##'
 ##' # Remove the last rows
 ##' # No need to subset left hand side. Dimension are automatically adjusted.
-##' tail(plantGrowth[1])
-##' plantGrowth[1] <- plantGrowth[1][c(-131,-132), ]
-##' tail(plantGrowth[1])
+##' tail(plantGrowth[[1]])
+##' plantGrowth[[1]] <- plantGrowth[[1]][c(-131,-132), ]
+##' tail(plantGrowth[[1]])
 ##'
 ##' # Column names are also valid
-##' plantGrowth[1][129:130,"SNW1C"] 
-##' plantGrowth[1][129:130,"SNW1C"] <- 1100:1101
-##' plantGrowth[1][129:130,"SNW1C"] 
+##' plantGrowth[[1]][129:130,"SNW1C"] 
+##' plantGrowth[[1]][129:130,"SNW1C"] <- 1100:1101
+##' plantGrowth[[1]][129:130,"SNW1C"] 
 ##'
 setReplaceMethod(
-                 f="[",
+                 f="[[",
                  signature=c(x="Dasst",i="numeric",value="ANY"),
                  definition=function(x,i,value){
                    if(validRange(i, 1, length(x@tables))){
@@ -448,189 +456,142 @@ setReplaceMethod(
                  }
                  )
 
-##' Drop contents for class \code{\linkS4class{Dasst}}
+
+##' "[" method for class Dasst
 ##'
-##' \code{dropContents<-} drops the contents of slots
-##' from the object of class \code{\linkS4class{Dasst}} at selected position.
+##' \code{"["} gets a subset of
+##' an object of class \code{\linkS4class{Dasst}}.
 ##'
-##' This method drops the contents of slots
-##' from the object of class \code{\linkS4class{Dasst}} at selected position.
+##' This method gets a subset of 
+##' an object of class \code{\linkS4class{Dasst}}.
+##' Shorter objects in the expression are recycled as often as need be
+##' until they match the length of the longest object.
 ##'
 ##' @param x An object of class \code{\linkS4class{Dasst}}.
-##' @param value An integer value. Position where contents will be dropped.
-##' @return The actual object of class \code{\linkS4class{Dasst}}.
+##' @param i An integer or logical vector. This is the subset
+##' that will be retrieved from the whole object.
+##' @return A new object of class \code{\linkS4class{Dasst}} that comprises
+##' the elements from the selected subset. 
 ##'
-##' @export dropContents<-
-##' @name dropContents<-
+##' @seealso \code{\link{[<-}}
+##'
+##' @name [
 ##' @docType methods
-##' @rdname Dasst-drop
+##' @rdname Dasst-getsubsetting
+##' @aliases [,Dasst,numeric-method
+##' @exportMethod [
 ##'
 ##' @examples
 ##' 
 ##' data(plantGrowth)
-##' summary(plantGrowth)
-##' dropContents(plantGrowth) <- 10
-##' summary(plantGrowth)
+##' length(plantGrowth)
+##' plantgro1 <- plantGrowth[1:10]
+##' length(plantgro1)
+##' class(plantgro1)
 ##'
-###if(!isGeneric("dropContents<-")){
-setGeneric(name = "dropContents<-", def = function(x, value){standardGeneric("dropContents<-")} )
-###}
+##' # Drop contents corresponing to selected orders
+##' summary(plantGrowth)
+##' plantgro2 <- plantGrowth[-1]
+##' summary(plantgro2)
+##'
+setMethod(
+          f="[",
+          signature=c(x="Dasst",i="numeric"),
+          definition=function(x,i){
 
-##' @rdname Dasst-drop
-##' @name dropContents<-
-##' @aliases dropContents<-,Dasst,numeric-method
-##' @exportMethod dropContents<-
+            return(new(Class="Dasst", fileNames=x@fileNames[i], sections=x@sections[i], fields=x@fields[i], tables=x@tables[i]))
+
+          }
+          )
+
+##' @rdname Dasst-getsubsetting
+##' @aliases [,Dasst,logical-method
+##' @exportMethod [
+##'
+setMethod(
+          f="[",
+          signature=c(x="Dasst",i="logical"),
+          definition=function(x,i){
+
+            return(new(Class="Dasst", fileNames=x@fileNames[i], sections=x@sections[i], fields=x@fields[i], tables=x@tables[i]))
+
+          }
+          )
+
+##' "[<-" method for class \code{\linkS4class{Dasst}}
+##'
+##' \code{"[<-"} sets to a subset of
+##' an object of class \code{\linkS4class{Dasst}}
+##' an other object of the same class 
+##'
+##' This method sets to a subset of
+##' an object of class \code{\linkS4class{Dasst}}
+##' an other object of the same class.
+##' Shorter objects in the expression are recycled as often as need be
+##' until they match the length of the longest object.
+##'
+##' @param x An object of class \code{\linkS4class{Dasst}}.
+##' @param i An integer or logical vector. This is the subset
+##' that will be updated from the whole object.
+##' @param value An object of class \code{\linkS4class{Dasst}}
+##' that will be stored at the given subset. 
+##' @return The actual object of class \code{\linkS4class{Dasst}}
+##' that comprises the elements updated from the selected subset. 
+##'
+##' @seealso \code{\link{[}}
+##'
+##' @name [<-
+##' @docType methods
+##' @rdname Dasst-setsubsetting
+##' @aliases [<-,Dasst,numeric-method
+##' @exportMethod [<-
+##'
+##' @examples
+##' 
+##' # Replace position 1 with the contents of position 30.
+##' data(plantGrowth)
+##' plantGrowth[[1]][1:10, 1:15]
+##' plantGrowth[1] <- plantGrowth[30]
+##' plantGrowth[[1]][1:10, 1:15]
+##'
+##' # Add a copy of the first order at the end extending the object length
+##' rmax <- length(plantGrowth)
+##' rmax
+##' plantGrowth[rmax+1] <- plantGrowth[1]
+##' length(plantGrowth)
+##'
+##' # Copy position 2 into position 31, moving the former position 31 to the 32.
+##' plantgro31 <- plantGrowth[31]
+##' plantGrowth[31] <- plantGrowth[2]
+##' plantGrowth[32] <- plantgro31
 ##'
 setReplaceMethod(
-                 f="dropContents",
-                 signature=c(x="Dasst", value="numeric"),
-                 definition=function(x, value){
-                   if(validRange(value, 1, length(x@tables))){
-                     for(sn in slotNames(x)){
-                       sv <- slot(x, sn)
-                       slot(x, sn) <- sv[-value]
-                     }
+                 f="[",
+                 signature=c(x="Dasst",i="numeric",value="ANY"),
+                 definition=function(x,i,value){
+
+                   for(sn in slotNames(x)){
+                     slot(x, sn)[i] <- slot(value, sn)
                    }
+                   
                    validObject(x)
                    x
                  }
                  )
-
-
-##' Get contents for class \code{\linkS4class{Dasst}}.
-##'
-##' \code{getContents} gets the contents of all the slots
-##' of the object of class \code{\linkS4class{Dasst}} at the selected position.
-##'
-##' This method gets the contents  of all the slots
-##' of the object of class \code{\linkS4class{Dasst}} at the selected position.
-##'
-##' @param x An object of class \code{\linkS4class{Dasst}}.
-##' @param i An integer value. Position where to retrieve contents.
-##' @return A list with the slot names and its contents at the given position.
-##'
-##' @export getContents
-##' @name getContents
-##' @docType methods
-##' @rdname getContents-methods
-##'
-##' @examples
-##' 
-##' data(plantGrowth)
-##' plantgro1 <- getContents(plantGrowth, 1)
-##' class(plantgro1)
-##'
-###if(!isGeneric("getContents")){
-setGeneric(name = "getContents", def = function(x, i){standardGeneric("getContents")} )
-###}
-
-##' @rdname getContents-methods
-##' @aliases getContents,Dasst,numeric-method
-##' @exportMethod getContents
-##'
-setMethod(
-          f="getContents",
-          signature=c(x="Dasst", i="numeric"),
-          definition=function(x, i){
-            if(validRange(i, 1, length(x@tables))){
-              return(list(fileNames=x@fileNames[i], sections=x@sections[i], fields=x@fields[i], tables=x@tables[i]))
-            }else{
-              return(NULL)
-            }
-          }
-          )
-
-##' Set contents for class \code{\linkS4class{Dasst}}.
-##'
-##' \code{setContents<-} sets the contents of all the slots
-##' of the object of class \code{\linkS4class{Dasst}} at the selected position.
-##'
-##' This method sets the contents  of all the slots
-##' of the object of class \code{\linkS4class{Dasst}} at the selected position.
-##'
-##' @param x An object of class \code{\linkS4class{Dasst}}.
-##' @param index An integer value. Position where to insert or update contents.
-##' @param replace A logical value. If \code{TRUE} old contents are
-##'  replaced with new ones. Otherwise, new contents are inserted
-##'  at given position, and old contents are shifted conveniently
-##'  to higher positions.
-##' @param value A list with contents for each slot. 
-##' @return The actual object.
-##'
-##' @export setContents<-
-##' @name setContents<-
-##' @docType methods
-##' @rdname Dasst-setContents
-##'
-##' @examples
-##' 
-##' data(plantGrowth)
-##' plantgro1 <- getContents(plantGrowth, 1)
-##' setContents(plantGrowth, 2, TRUE) <- plantgro1
-##'
-###if(!isGeneric("setContents<-")){
-setGeneric(name = "setContents<-", def = function(x, index, replace, value){standardGeneric("setContents<-")} )
-###}
-
-##' @rdname Dasst-setContents
-##' @name setContents<-
-##' @aliases setContents<-,Dasst,ANY,ANY,list-method
-##' @exportMethod setContents<-
+##' @name [<-
+##' @rdname Dasst-setsubsetting
+##' @aliases [<-,Dasst,logical-method
+##' @exportMethod [<-
 ##'
 setReplaceMethod(
-                 f="setContents",
-                 signature=c(x="Dasst", value="list"),
-                 definition=function(x, index, replace, value){
+                 f="[",
+                 signature=c(x="Dasst",i="logical",value="ANY"),
+                 definition=function(x,i,value){
 
-### Check list value, format 
-                   
-                   if(!missing(index) && length(index) > 1){
-
-                     cat("Error: Vector indexing is not allow.\n")
-                     cat("Replace a table in the range from 1 to ", length(x@tables), "or\n")
-                     cat("Insert a table at a new position.\n")
-                     
-                   }else if( (!missing(index) && !is.numeric(index)) || 
-                            (!missing(index) && is.numeric(index) && index < 1) ){
-                     
-                     cat("Error: Use a positive integer as table index.\n")
-                     cat("Replace a table in the range from 1 to ", length(x@tables), "or\n")
-                     cat("Insert a table at a new position.\n")
-                     
-                   }else if( (!missing(replace) && length(replace) > 1) ||
-                            (!missing(replace) && !is.logical(replace)) ){
-
-                     cat("Error: replace must be a single logical.\n")
-                     
-                   }else{
-
-                     imax <- length(x@tables)
-                     
-                     for(sn in slotNames(x)){
-
-                       
-                       if(!missing(index) && index >= 1 && index <= imax && !missing(replace) && replace){
-                         slot(x, sn)[index] <- value[[sn]]
-                         
-                       }else if(!missing(index) && index <= imax){
-                         sv <- slot(x, sn)
-                         length(slot(x, sn)) <- imax + 1
-                         slot(x, sn)[index] <- value[[sn]]
-                         slot(x, sn)[(index+1):(imax+1)] <- sv[index:imax]
-
-                       }else if(!missing(index)){
-                         length(slot(x, sn)) <- floor(index - 1)
-                         slot(x, sn)[index] <- value[[sn]]
-
-                       }else{
-                         sv <- slot(x, sn)
-                         slot(x, sn) <- c(sv, value[[sn]])
-                       }
-                       
-                     }
-                     
+                   for(sn in slotNames(x)){
+                     slot(x, sn)[i] <- slot(value, sn)
                    }
-
+                   
                    validObject(x)
                    x
                  }
@@ -638,7 +599,7 @@ setReplaceMethod(
 
 ##' Add date class to objects of class Dasst
 ##'
-##' \code{as.Date<-} adds a column of class date to tables
+##' \code{addDate<-} adds a column of class date to tables
 ##' of the object of class \code{\linkS4class{Dasst}}.
 ##'
 ##' This method adds a column of class date to tables
@@ -647,67 +608,61 @@ setReplaceMethod(
 ##' objects in a new column whose name begins with "date_" and
 ##' follows with the names of column fields involved in the date extraction.
 ##'
+##' So far, the new column will not be saved if the write method is invoked.
+##'
 ##' @param x An object of class \code{\linkS4class{Dasst}}.
 ##' @param ... Other parameters:
 ##'  format, character vector encoding the date format;
-##'  index, numeric vector for a subset of tables.
 ##' @param value A formula, numeric vector or character vector.
 ##'  Order of the column fields from where dates can be composed.
 ##' @return The actual object.
 ##'
-##' @export as.Date<-
-##' @name as.Date<-
+##' @export addDate<-
+##' @name addDate<-
 ##' @docType methods
-##' @rdname Dasst-as.Date
+##' @rdname Dasst-addDate
 ##'
 ##' @examples
 ##' 
 ##' data(plantGrowth)
-##' as.Date(plantGrowth) <- ~ YEAR + DOY
+##' addDate(plantGrowth) <- ~ YEAR + DOY
 ##'
 ##' # or
-##' as.Date(plantGrowth) <- c("YEAR", "DOY")
+##' addDate(plantGrowth) <- c("YEAR", "DOY")
 ##'
 ##' # or
-##' as.Date(plantGrowth) <- c(1, 2)
+##' addDate(plantGrowth) <- c(1, 2)
 ##'
 ##' # Only one tables 1 and specifying date format
-##' as.Date(plantGrowth, index=c(1,2), format="%Y%j") <- ~ YEAR + DOY
+##' addDate(plantGrowth, index=c(1,2), format="%Y%j") <- ~ YEAR + DOY
 ##'
-###if(!isGeneric("as.Date<-")){
-setGeneric(name = "as.Date<-", def = function(x, ..., value){standardGeneric("as.Date<-")} )
+###if(!isGeneric("addDate<-")){
+setGeneric(name = "addDate<-", def = function(x, ..., value){standardGeneric("addDate<-")} )
 ###}
 
-##' @rdname Dasst-as.Date
-##' @name as.Date<-
-##' @aliases as.Date<-,Dasst-method
-##' @exportMethod as.Date<-
+##' @rdname Dasst-addDate
+##' @name addDate<-
+##' @aliases addDate<-,Dasst-method
+##' @exportMethod addDate<-
 ##'
 setReplaceMethod(
-                 f="as.Date",
+                 f="addDate",
                  signature=c(x="Dasst", value="ANY"),
                  definition=function(x, ..., value){
 
-                   datesNumbers <- numeric()
-
                    dateFormat <- "%Y%j"
-                   ix <- 1:length(x)
-                   
+
                    dots <- list(...)
                    if (length(dots)){
                      
                      addedArgs <- names(dots)
-                     
                      if (!is.na(match("format", addedArgs)))
                        dateFormat <- dots[["format"]]
-
-                     if (!is.na(match("index", addedArgs)))
-                       ix <- dots[["index"]]
                      
                    }
 
-
-                   for(i in ix){
+                   datesNumbers <- numeric()
+                   for(i in 1:length(x)){
                      
                      if (inherits(value, "formula")) {
                        cc = model.frame(value, x@tables[[i]])
@@ -740,6 +695,7 @@ setReplaceMethod(
 
                      colName <- paste(names(x@tables[[i]])[datesNumbers], collapse="_")
                      colName <- paste("date", colName, sep="_")
+                     
                      if (length(datesNumbers) == 1){
                        x@tables[[i]][[colName]] <- as.Date(as.character(x@tables[[i]][ ,datesNumbers]), format=dateFormat)
                      }else{
@@ -762,14 +718,15 @@ setReplaceMethod(
 ##' This method computes an expression taking the values recorded
 ##' on each column field used in the expression belonging
 ##' to the object of class \code{\linkS4class{Dasst}}.
-##' The result is stored as a new column table. 
+##' The result is stored as a new column table.
+##'
+##' So far, the new column will not be saved if the write method is invoked.
 ##'
 ##' @param x An object of class \code{\linkS4class{Dasst}}.
 ##' @param cocol A character string. The name of the new column field.
-##' @param ix An optional integer vector. The subset tables to be processed.
 ##' @param value A character string. An expression to compute
 ##'  within column fields.
-##' @return The actual object.
+##' @return The actual object of class \code{\linkS4class{Dasst}}.
 ##'
 ##' @export compute<-
 ##' @name compute<-
@@ -783,40 +740,29 @@ setReplaceMethod(
 ##'  "as.Date(paste(YEAR, DOY, sep=\"\"), format=\"%Y%j\")"
 ##' 
 ###if(!isGeneric("compute<-")){
-setGeneric(name = "compute<-", def = function(x, cocol, ix, value){standardGeneric("compute<-")} )
+setGeneric(name = "compute<-", def = function(x, cocol, value){standardGeneric("compute<-")} )
 ###}
 
 ##' @rdname Dasst-compute
 ##' @name compute<-
-##' @aliases compute<-,Dasst,character,ANY,character-method
+##' @aliases compute<-,Dasst,character,character-method
 ##' @exportMethod compute<-
 ##'
 setReplaceMethod(
                  f="compute",
                  signature=c(x="Dasst", cocol="character", value="character"),
-                 definition=function(x, cocol, ix, value){
+                 definition=function(x, cocol, value){
 
-                   if (!missing(ix) && !is.numeric(ix) ){
-                     
-                     cat("Error: Use a positive integer vector as table index.\n")
-                     
-                   }else{
-
-                     if(missing(ix)){
-                       ix <- length(x@tables)
-                     }
-                     
-                     for(i in ix){
-                       chrexpr <- parse(text = value)
-                       x@tables[[i]][[cocol]] <- eval(chrexpr, x@tables[[i]], parent.frame())
-                     }
+                   
+                   for(i in 1:length(x@tables)){
+                     chrexpr <- parse(text = value)
+                     x@tables[[i]][[cocol]] <- eval(chrexpr, x@tables[[i]], parent.frame())
                    }
+                   
                    validObject(x)
                    x
                  }
                  )
-
-
 
 
 ##' Get ancillary data from an object of
@@ -1008,14 +954,14 @@ print.Ancillary <- function(x, ...){
 ##' @examples
 ##' 
 ##' data(plantGrowth)
-##' searchAncillary(plantGrowth, sectionKey="RUN 1")
+##' searchAncillary(plantGrowth, secKey="RUN[[:space:]]*1")
 ##'
 ###if(!isGeneric("searchAncillary")){
 setGeneric(name = "searchAncillary", def = function(x, fileKey="", secKey="", colKey="", ...){standardGeneric("searchAncillary")} )
 ###}
 
 ##' @rdname searchAncillary-methods
-##' @aliases searchAncillary,Dasst,character,character,character-method
+##' @aliases searchAncillary,Dasst-method
 ##' @exportMethod searchAncillary
 ##'
 setMethod(

@@ -24,7 +24,7 @@ library(Dasst)
 
 ### Example
 data(plantGrowth)
-plot(plantGrowth[1][,c("DAP","LAID")])
+plot(plantGrowth[[1]][,c("DAP","LAID")])
 ```
 
 [Github](https://github.com/hlozza/Dasst)

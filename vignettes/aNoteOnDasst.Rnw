@@ -61,31 +61,31 @@ The \code{show} method displays the contents of the first table stored in an obj
 summary(plantGrowth)
 @
 
-Each table contents is accessed by the \code{[} method. Specific values can be set by rows, column names, or a combination of both.  For example, the value for the \texttt{"YEAR"} field on row \texttt{1} corresponding to table \texttt{1} is
+Each table contents is accessed by the \code{[[} method. Specific values can be set by rows, column names, or a combination of both.  For example, the value for the \texttt{"YEAR"} field on row \texttt{1} corresponding to table \texttt{1} is
   
 <<eval=TRUE,echo=TRUE>>=
-plantGrowth[1][1,"YEAR"]
+plantGrowth[[1]][1,"YEAR"]
 @
 
 \subsection{Dates processing}
 
-The conversion from year (\texttt{YEAR}) and day of the year (\texttt{DOY}) is perform by \code{as.Date<-} method. It stores dates as \code{Date} objects in a new column named \texttt{date\_YEAR\_DOY}. 
+The conversion from year (\texttt{YEAR}) and day of the year (\texttt{DOY}) is perform by \code{addDate<-} method. It stores dates as \code{Date} objects in a new column named \texttt{date\_YEAR\_DOY}. 
 
 <<eval=TRUE,echo=TRUE>>=
-as.Date(plantGrowth) <- ~ YEAR + DOY
-plantGrowth[1][1:3,c("YEAR","DOY","date_YEAR_DOY")]
+addDate(plantGrowth) <- ~ YEAR + DOY
+plantGrowth[[1]][1:3,c("YEAR","DOY","date_YEAR_DOY")]
 @ 
 
 This turns very simply the sketch of evolution curves.  
 
 <<echo=TRUE,print=FALSE,fig=FALSE>>=
-plot(plantGrowth[1][,"date_YEAR_DOY"],plantGrowth[1][,"LAID"])
+plot(plantGrowth[[1]][,"date_YEAR_DOY"],plantGrowth[[1]][,"LAID"])
 @ 
 
 \begin{figure}[htb!]
 \begin{center}
 <<echo=FALSE,print=FALSE,fig=TRUE>>=
-plot(plantGrowth[1][,"date_YEAR_DOY"],plantGrowth[1][,"LAID"])
+plot(plantGrowth[[1]][,"date_YEAR_DOY"],plantGrowth[[1]][,"LAID"])
 @ 
 \end{center}
 \caption{Daily evolution of \texttt{LAID}.}
@@ -98,7 +98,7 @@ plot(plantGrowth[1][,"date_YEAR_DOY"],plantGrowth[1][,"LAID"])
 Several operations can be performed over the whole data set or restricted to a subset. We could be interested on computing the mean, variance, maximum, or minimum values per treatment. In the following example, we will compute the mean values of stem, leaf and grain weight for each day after planting (\texttt{DAP}) for treatment 1 that spans runs from 1 to 10: 
 
 <<eval=TRUE,echo=TRUE>>=
-from01to10 <- gatherTables(plantGrowth, 1:10, c("DAP"),
+from01to10 <- gatherTables(plantGrowth[1:10], c("DAP"),
                            c("SWAD","LWAD","GWAD"), mean)
 lastRow <- nrow(from01to10)
 from01to10[(lastRow-5):lastRow,]
@@ -136,13 +136,13 @@ From the summary information we notice that the \code{smmy} object contains only
 
 
 <<echo=TRUE,print=FALSE,fig=FALSE>>=
-boxplot(HWAM ~ TRNO, data=smmy[1])
+boxplot(HWAM ~ TRNO, data=smmy[[1]])
 @  
 
 \begin{figure}[htb!]
 \begin{center}
 <<echo=FALSE,print=FALSE,fig=TRUE>>= 
-boxplot(HWAM ~ TRNO, data=smmy[1])
+boxplot(HWAM ~ TRNO, data=smmy[[1]])
 @
 \end{center}
 \caption{Yield box plot. Treatments; 1: without fertilization, 2: with 50kg/ha of urea, 3: with 100kg/ha of urea.}
@@ -174,7 +174,7 @@ From the summary information we notice that the \code{wth} object contains 22 ta
 In order to obtain the full time series, we will stack only the even table numbers
 
 <<eval=TRUE,echo=TRUE>>=
-wthSeries <- stackTables(wth, seq(from=2, to=22, by=2))
+wthSeries <- stackTables(wth[seq(from=2, to=22, by=2)])
 @
 
 The result is available as \code{data.frame}.
@@ -205,9 +205,9 @@ We will read the experimental file \texttt{SANT7001.MZX} and we will replace the
 santfile <- system.file("extdata","SANT7001.MZX",package="Dasst")
 file.copy(santfile, "SANT7001.MZX")
 sant <- read.dssat("SANT7001.MZX")
-sant[9]
-sant[9][,"FAMN"] <- c(60,120)
-sant[9]
+sant[[9]]
+sant[[9]][,"FAMN"] <- c(60,120)
+sant[[9]]
 write.dssat(sant)
 @
 %options(digits=2)

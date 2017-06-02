@@ -21,9 +21,10 @@
 }
 \seealso{
   \code{\link{show}}, \code{\link{summary}},
-  \code{\link{[}} methods for content description, and
-  \code{\link{read.dssat}} function for reading files. For
-  other available methods see INDEX file.
+  \code{\link{[[}} \code{\link{[}} methods for content
+  description, and \code{\link{read.dssat}} function for
+  reading files. For other available methods see INDEX
+  file.
 
   An object example is available at
   \code{\link{plantGrowth}}.

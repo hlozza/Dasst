@@ -27,7 +27,11 @@
 \dontrun{
 
 data(plantGrowth)
-plot(plantGrowth[1][,"DAP"],plantGrowth[1][,"LAID"])
+plot(plantGrowth[[1]][,"DAP"],plantGrowth[[1]][,"LAID"])
+
+# Or
+
+plot(plantGrowth[[1]][,c("DAP","LAID")])
 
 }
 }

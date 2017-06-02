@@ -4,14 +4,16 @@ NULL
 
 ##' Build contents for an object of class Dasst.
 ##'
-##' \code{buildContents} generates contents that can be inserted into   
+##' \code{buildContents} generates contents that are inserted into   
 ##' an object of class \code{\linkS4class{Dasst}}.
 ##'
-##' This function builds the contents that can be inserted into   
-##' an object of class \code{\linkS4class{Dasst}}.
-##' The result is given as a \code{\link{list}} that can be inserted
-##' into an object of class \code{\linkS4class{Dasst}} using the
-##' \code{\link{setContents<-}} method.
+##' This function builds the contents that are inserted into   
+##' an object of class \code{\linkS4class{Dasst}} from a
+##' \code{\link{data.frame}} and ancillary character strings.
+##'
+##' The \code{\link{data.frame}} contains the actual data 
+##' that is stored as a table within the object of class
+##' \code{\linkS4class{Dasst}}.
 ##'
 ##' @param fileName A character string.  The file name and path
 ##'  corresponding to the generated contents.
@@ -23,19 +25,16 @@ NULL
 ##' @param table A data.frame. The records for the table
 ##'  of data included in the generated contents are inserted
 ##'  as a \code{\link{data.frame}}
-##' @return A \code{\link{list}} that can be inserted
-##'  into an object of class \code{\linkS4class{Dasst}}.
+##' @return An object of class \code{\linkS4class{Dasst}}.
 ##'
 ##' @export
 ##'
 ##' @examples
 ##' 
 ##' mydf <- data.frame(a=c(1,2,3), b=c("one","two","three"),c=c(1.1,2.2,3.3))
-##' mybc <- buildContents("MyTest.OUT","*TestSec",
-##'  "@@ID  NAME VALUE","  1   one 1.100", mydf)
 ##' myObj <- Dasst()
-##' length(myObj) <- 1
-##' setContents(myObj, 1, TRUE) <- mybc
+##' myObj[1] <- buildContents("MyTest.OUT","*TestSec",
+##'  "@@ID  NAME VALUE","  1   one 1.100", mydf)
 ##'
 buildContents <- function(fileName, section, headerLine, dataLine, table){
   
@@ -86,6 +85,5 @@ buildContents <- function(fileName, section, headerLine, dataLine, table){
     return(NULL)
   }
   
-  
-  return(list(fileNames=fileName, sections=section, fields=list(lval$nstd), tables=list(table)))
+  return(new(Class="Dasst", fileNames=fileName, sections=section, fields=list(lval$nstd), tables=list(table)))
 }
