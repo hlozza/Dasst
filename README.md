@@ -7,13 +7,13 @@ The R package *Dasst* provides methods and tools for reading, processing and wri
 You can install on linux systems
 
 ```sh
-R CMD INSTALL Dasst_0.2.0.tar.gz
+R CMD INSTALL Dasst_0.3.1.tar.gz
 ```
 
 On windows platforms, you can install a copy of the binary file 
 
 ```R
-install.packages("Dasst_0.2.0.zip", repos=NULL)
+install.packages("Dasst_0.3.1.zip", repos=NULL)
 ```
 
 
