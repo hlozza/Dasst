@@ -489,7 +489,7 @@ setReplaceMethod(
 ##' length(plantgro1)
 ##' class(plantgro1)
 ##'
-##' # Drop contents corresponing to selected orders
+##' # Drop contents corresponding to selected orders
 ##' summary(plantGrowth)
 ##' plantgro2 <- plantGrowth[-1]
 ##' summary(plantgro2)
@@ -776,7 +776,7 @@ setReplaceMethod(
 ##' of class \code{\linkS4class{Dasst}} connected to the selected
 ##' table orders.
 ##' Values are arranged in tables, and the order is the number
-##' assigned succesively to each of them after the data
+##' assigned successively to each of them after the data
 ##' have been stored within the \code{\linkS4class{Dasst}} object.
 ##' \code{getAncillary} provides ancillary data 
 ##' such as the file name which was originally read, and the section
@@ -792,7 +792,7 @@ setReplaceMethod(
 ##' @export getAncillary
 ##' @name getAncillary
 ##' @docType methods
-##' @rdname getAncillary-methods
+##' @rdname Dasst-getAncillary
 ##'
 ##' @examples
 ##' 
@@ -803,7 +803,7 @@ setReplaceMethod(
 setGeneric(name = "getAncillary", def = function(x, i){standardGeneric("getAncillary")} )
 ###}
 
-##' @rdname getAncillary-methods
+##' @rdname Dasst-getAncillary
 ##' @aliases getAncillary,Dasst,numeric-method
 ##' @exportMethod getAncillary
 ##'
@@ -829,7 +829,7 @@ setMethod(
           )
 
 
-##' @rdname getAncillary-methods
+##' @rdname Dasst-getAncillary
 ##' @aliases getAncillary,Dasst,missing-method
 ##' @exportMethod getAncillary
 ##'
@@ -887,7 +887,7 @@ print.Ancillary <- function(x, ...){
       for(cmps in names(x)){
 
         cval <- x[[cmps]][i]
-        # Trim trailing whitespace
+        # Trim trailing white space
         if(is.character(cval)){
           cval <- sub("\\s+$", "", cval)
         }
@@ -910,7 +910,7 @@ print.Ancillary <- function(x, ...){
     
     if(rowLimit < length(x[["orders"]])){
       cat("\n")
-      cat("... Print limitted to the first ", rowLimit, " rows.\n")
+      cat("... Print limited to the first ", rowLimit, " rows.\n")
     }
     cat("\n")
     cat("For more, ancillary_object[[<name>]]; ")
@@ -927,7 +927,7 @@ print.Ancillary <- function(x, ...){
 ##' \code{searchAncillary} looks for ancillary data that satisfies
 ##' the search criteria
 ##' and gives the table orders in the \code{\linkS4class{Dasst}} object
-##' for succesful results. 
+##' for successful results. 
 ##'
 ##' This method searches for character strings or regular expressions
 ##' in the ancillary data of the \code{\linkS4class{Dasst}} object.
@@ -949,18 +949,19 @@ print.Ancillary <- function(x, ...){
 ##' @export searchAncillary
 ##' @name searchAncillary
 ##' @docType methods
-##' @rdname searchAncillary-methods
+##' @rdname Dasst-searchAncillary
 ##'
 ##' @examples
 ##' 
 ##' data(plantGrowth)
-##' searchAncillary(plantGrowth, secKey="RUN[[:space:]]*1")
+##' searchAncillary(plantGrowth, secKey="run[[:space:]]*1")
+##' searchAncillary(plantGrowth, secKey="run[[:space:]]*1", ignore.case=TRUE)
 ##'
 ###if(!isGeneric("searchAncillary")){
 setGeneric(name = "searchAncillary", def = function(x, fileKey="", secKey="", colKey="", ...){standardGeneric("searchAncillary")} )
 ###}
 
-##' @rdname searchAncillary-methods
+##' @rdname Dasst-searchAncillary
 ##' @aliases searchAncillary,Dasst-method
 ##' @exportMethod searchAncillary
 ##'

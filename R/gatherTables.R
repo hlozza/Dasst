@@ -57,7 +57,7 @@ gatherTables <- function(object, coCol, opCol, operation, ...){
 
   }else{
 
-    ##      Trimm to equal lengths
+    ##      Trim to equal lengths
     col <- opCol[1]
     minLen <- min(vapply(as(object,"list"), function(x) length(x[[col]]), 1))
 

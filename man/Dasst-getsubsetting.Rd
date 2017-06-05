@@ -31,7 +31,7 @@ plantgro1 <- plantGrowth[1:10]
 length(plantgro1)
 class(plantgro1)
 
-# Drop contents corresponing to selected orders
+# Drop contents corresponding to selected orders
 summary(plantGrowth)
 plantgro2 <- plantGrowth[-1]
 summary(plantgro2)

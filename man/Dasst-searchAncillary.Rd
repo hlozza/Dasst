@@ -24,7 +24,7 @@
 \description{
   \code{searchAncillary} looks for ancillary data that
   satisfies the search criteria and gives the table orders
-  in the \code{\linkS4class{Dasst}} object for succesful
+  in the \code{\linkS4class{Dasst}} object for successful
   results.
 }
 \details{
@@ -38,6 +38,7 @@
 }
 \examples{
 data(plantGrowth)
-searchAncillary(plantGrowth, secKey="RUN[[:space:]]*1")
+searchAncillary(plantGrowth, secKey="run[[:space:]]*1")
+searchAncillary(plantGrowth, secKey="run[[:space:]]*1", ignore.case=TRUE)
 }
 

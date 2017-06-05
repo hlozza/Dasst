@@ -1,6 +1,6 @@
 Package: Dasst
-Version: 0.3.0
-Date: 2017-06-02
+Version: 0.3.1
+Date: 2017-06-05
 Title: Tools for Reading, Processing and Writing DSSAT Files
 Authors@R: c(person("Homero", "Lozza", role = c("aut", "cre"),
     email = "homerolozza@gmail.com"))

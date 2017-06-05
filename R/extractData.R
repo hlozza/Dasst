@@ -69,7 +69,7 @@ extractData <- function(fileUnit, npsDF, ctrStop=NA, patIgnore="", patStop=""){
     nstdDF[["text"]] <- cellChrMode
     nstdDF[["decimals"]] <- cellNumMode
 
-    ## Assign names. For some unkown reason, it changes '#' chars in header
+    ## Assign names. For some unknown reason, it changes '#' chars in header
                                         # to '.' chars. 
     names(valuesDF) <- nstdDF[["name"]]
   }

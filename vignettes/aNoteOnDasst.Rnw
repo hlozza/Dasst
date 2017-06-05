@@ -7,6 +7,8 @@
 
 
 \usepackage{Sweave}
+\SweaveOpts{keep.source=TRUE}
+
 \newcommand{\strong}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \let\pkg=\strong
 \newcommand{\code}[1]{\texttt{\small #1}}
@@ -34,9 +36,15 @@ The \code{read.dssat} function can be invoked passing a vector of characters wit
 
 %library(Dasst, lib.loc="/home/lozza/GeoStatistics/")
 
+<<echo=false>>=
+options(continue=" ")
+@
+
+
 <<eval=TRUE,echo=TRUE>>=
 library(Dasst)
-dssatfile <- system.file("extdata","PlantGro.OUT",package="Dasst")
+dssatfile <- system.file("extdata","PlantGro.OUT", 
+                         package="Dasst")
 plantgro <- read.dssat(dssatfile)
 @
 %options(digits=2)
@@ -67,6 +75,15 @@ Each table contents is accessed by the \code{[[} method. Specific values can be 
 plantGrowth[[1]][1,"YEAR"]
 @
 
+The table orders are suitable for performing operations, and we can find them searching for patterns within the filename, section and/or header parts belonging to each table. Also, we can print a brief summary of the results.
+
+<<eval=TRUE,echo=TRUE>>=
+nrun <- searchAncillary(plantGrowth, secKey="run[[:space:]]*3", 
+                        ignore.case=TRUE)
+nrun
+getAncillary(plantGrowth, nrun)
+@
+
 \subsection{Dates processing}
 
 The conversion from year (\texttt{YEAR}) and day of the year (\texttt{DOY}) is perform by \code{addDate<-} method. It stores dates as \code{Date} objects in a new column named \texttt{date\_YEAR\_DOY}. 
@@ -82,7 +99,7 @@ This turns very simply the sketch of evolution curves.
 plot(plantGrowth[[1]][,"date_YEAR_DOY"],plantGrowth[[1]][,"LAID"])
 @ 
 
-\begin{figure}[htb!]
+\begin{figure}[hbt!]
 \begin{center}
 <<echo=FALSE,print=FALSE,fig=TRUE>>=
 plot(plantGrowth[[1]][,"date_YEAR_DOY"],plantGrowth[[1]][,"LAID"])
@@ -110,7 +127,7 @@ The result is stored in a \code{data.frame} which can be manipulated and plotted
 plot(SWAD + LWAD + GWAD ~ DAP, data=from01to10)
 @ 
 
-\begin{figure}[htb!]
+\begin{figure}[hbt!]
 \begin{center}
 <<echo=FALSE,print=FALSE,fig=TRUE>>=
 plot(SWAD + LWAD + GWAD ~ DAP, data=from01to10)
@@ -120,6 +137,7 @@ plot(SWAD + LWAD + GWAD ~ DAP, data=from01to10)
 \label{fig:meanEvol}
 \end{figure}
 
+\clearpage
 
 \subsection{Yield plots}
 
@@ -127,7 +145,7 @@ Yield may be retrieved from the last row for each run of the \texttt{PlantGro.OU
 
 
 <<eval=TRUE,echo=TRUE>>=
-smmyfile <- system.file("extdata","Summary.OUT",package="Dasst")
+smmyfile <- system.file("extdata", "Summary.OUT", package="Dasst")
 smmy <- read.dssat(smmyfile)
 summary(smmy)
 @
@@ -159,7 +177,8 @@ We will read the \texttt{.WTH} files available from the \texttt{extdata} directo
 
 <<eval=TRUE,echo=TRUE>>=
 wthPath <- paste(find.package("Dasst"),"extdata",sep="/")
-wthFiles <- list.files(path=wthPath, pattern="WTH", full.names=TRUE)
+wthFiles <- list.files(path=wthPath, pattern="WTH", 
+                       full.names=TRUE)
 wth <- read.dssat(wthFiles)
 summary(wth)
 @
@@ -180,14 +199,16 @@ wthSeries <- stackTables(wth[seq(from=2, to=22, by=2)])
 The result is available as \code{data.frame}.
 
 <<echo=TRUE,print=FALSE,fig=FALSE>>=
-plot(TMAX ~ as.Date(as.character(DATE),format="%y%j"), wthSeries)
+plot(TMAX ~ as.Date(as.character(DATE),format="%y%j"), 
+     wthSeries)
 @  
 
 
 \begin{figure}[htb!]
 \begin{center}
 <<echo=FALSE,print=FALSE,fig=TRUE>>= 
-plot(TMAX ~ as.Date(as.character(DATE),format="%y%j"), wthSeries)
+plot(TMAX ~ as.Date(as.character(DATE),format="%y%j"), 
+     wthSeries)
 @
 \end{center}
 \caption{Daily maximum temperature series.}
@@ -202,7 +223,8 @@ This section gives a brief idea of the potential of \code{write.dssat} method fo
 We will read the experimental file \texttt{SANT7001.MZX} and we will replace the fertilization doses. Because this file will be replaced, we make a copy on our working directory.
 
 <<eval=TRUE,echo=TRUE>>=
-santfile <- system.file("extdata","SANT7001.MZX",package="Dasst")
+santfile <- system.file("extdata", "SANT7001.MZX", 
+                        package="Dasst")
 file.copy(santfile, "SANT7001.MZX")
 sant <- read.dssat("SANT7001.MZX")
 sant[[9]]

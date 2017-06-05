@@ -25,7 +25,7 @@ class \code{\linkS4class{Dasst}}}
   This method gets ancillary data from an object of class
   \code{\linkS4class{Dasst}} connected to the selected
   table orders. Values are arranged in tables, and the
-  order is the number assigned succesively to each of them
+  order is the number assigned successively to each of them
   after the data have been stored within the
   \code{\linkS4class{Dasst}} object. \code{getAncillary}
   provides ancillary data such as the file name which was
