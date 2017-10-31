@@ -1,5 +1,18 @@
 # see http://docs.travis-ci.com/user/languages/r/
 language: r
 cache: packages
+
 # Be strict when checking our package
 warnings_are_errors: true
+
+addons: 
+  apt:
+    packages:
+      - qpdf
+
+r_build_args: --resave-data
+
+#script: 
+#- R CMD build --resave-data .
+#- R CMD check "${PKG_TARBALL}" --as-cran --no-manual --no-manual --no-manual --no-manual; CHECK_RET=$?
+
