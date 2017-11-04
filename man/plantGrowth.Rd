@@ -24,7 +24,6 @@
   with 100kg/ha of urea.
 }
 \examples{
-\dontrun{
 
 data(plantGrowth)
 plot(plantGrowth[[1]][,"DAP"],plantGrowth[[1]][,"LAID"])
@@ -33,7 +32,6 @@ plot(plantGrowth[[1]][,"DAP"],plantGrowth[[1]][,"LAID"])
 
 plot(plantGrowth[[1]][,c("DAP","LAID")])
 
-}
 }
 \seealso{
   \code{\linkS4class{Dasst}} for class definition and the

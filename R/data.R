@@ -29,7 +29,6 @@
 ##' and the example at \code{\link{read.dssat}}.
 ##' 
 ##' @examples
-##' \dontrun{
 ##'
 ##' data(plantGrowth)
 ##' plot(plantGrowth[[1]][,"DAP"],plantGrowth[[1]][,"LAID"])
@@ -38,7 +37,6 @@
 ##'
 ##' plot(plantGrowth[[1]][,c("DAP","LAID")])
 ##' 
-##' }
 ##' 
 ##' 
 NULL

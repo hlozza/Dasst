@@ -4,7 +4,7 @@ note <- sprintf("R package version %s", meta$Version)
 bibentry(bibtype = "Manual",
          title = "{Dasst}: Tools for Reading, Processing and Writing DSSAT Files",
          author = c(person("Homero", "Lozza")),
-         organization = "Institution",
+         organization = " ",
          address = "Buenos Aires, Argentina",
          year = year,
          note = note,

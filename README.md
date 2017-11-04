@@ -1,23 +1,22 @@
 #Dasst
 
-The R package *Dasst* provides methods and tools for reading, processing and writing files complying with the DSSAT-CSM fixed width format.
+`Dasst` provides methods and tools for reading, processing and writing 
+files complying with the `DSSAT-CSM` fixed width format. `Dasst` enables
+DSSAT-CSM AS Simple Tables. The DSSAT cropping system model is described
+at J.W. Jones, G. Hoogenboomb, C.H. Porter, K.J. Boote, W.D. Batchelor, 
+L.A. Hunt, P.W. Wilkens, U. Singh, A.J. Gijsman, J.T. Ritchie (2003) 
+<https://doi.org/10.1016/S1161-0301(02)00107-7>.
 
+## Installing the package
 
-## Installation
-You can install on linux systems
-
-```sh
-R CMD INSTALL Dasst_0.3.1.tar.gz
-```
-
-On windows platforms, you can install a copy of the binary file 
+To install the latest version from `GitHub`:
 
 ```R
-install.packages("Dasst_0.3.1.zip", repos=NULL)
+install.packages("devtools")
+devtools::install_github("hlozza/Dasst")
 ```
 
-
-## Usage
+## Quick tutorial
 
 ```R
 library(Dasst)

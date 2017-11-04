@@ -2,29 +2,43 @@
 ##'
 NULL
 
-##' Write a DSSAT file from an object of class Dasst
+##' Write to a DSSAT file from an object of class Dasst
 ##'
-##' \code{write.dssat} writes the contents of
-##' an object of class \code{\linkS4class{Dasst}} to a file.
+##' \code{write.dssat} writes to a file the contents of
+##' an object of class \code{\linkS4class{Dasst}}.
 ##'
-##' This function writes the contents of
-##' an object of class \code{\linkS4class{Dasst}} to a file
+##' This function writes to a file the contents of
+##' an object of class \code{\linkS4class{Dasst}} 
 ##' striving to maintain compatibility with the DSSAT file format.
 ##'
+##' The \code{fnames} vector specifies the paths to the files
+##' where data will be stored. Each table of the
+##' \code{\linkS4class{Dasst}} object may be saved in an individual file.
+##' If the length of \code{fnames} vector is shorter than the
+##' length of the object, then the paths will be recycled
+##' as necessary.
+##'
+##' If \code{fnames} is not specified, the paths of the originally
+##' read files are used. First, the original files are saved appending
+##' a \file{.bak} extension. Then, the \code{\linkS4class{Dasst}}
+##' object is saved using these paths. 
+##'
 ##' @param object An object of class \code{\linkS4class{Dasst}}.
+##' @param fnames A character vector. An optional parameter
+##'  encoding the paths to the files where the contents of
+##'  the object of class \code{\linkS4class{Dasst}} will be stored.
 ##'
 ##' @export
 ##'
 ##' @examples
-##' \dontrun{
 ##' 
 ##' data(plantGrowth)
 ##' length(plantGrowth) <- 1
-##' write.dssat(plantGrowth)
+##' ffn <- paste(tempdir(), "PlantGro.OUT", sep="/")
+##' write.dssat(plantGrowth, ffn)
 ##'
-##' }
 ##'
-write.dssat <- function(object){
+write.dssat <- function(object, fnames=character()){
 
   ## check object 
 
@@ -32,24 +46,29 @@ write.dssat <- function(object){
     stop(deparse(substitute(object)), " is not of class Dasst.\n")
   }
 
+  fileNames <- object@fileNames
+  if(length(fnames)){
+    fileNames <- rep(fnames, length(object) %/% length(fnames) + 1)
+    length(fileNames) <- length(object)
+  }
 
-  fileName <- ""
+  currentName <- ""
   fd <- file()
   prevSection <- ""
   
   for(tix in 1:length(object)){
 
-    if(! identical(fileName,object@fileNames[tix])){
+    if(! identical(currentName,fileNames[tix])){
 
-      fileName <- object@fileNames[tix]
+      currentName <- fileNames[tix]
       if(isOpen(fd)){
         close(fd)
       }
-      if(file.exists(fileName)){
-        file.rename(fileName, paste(fileName, ".bak", sep=""))
+      if(file.exists(currentName)){
+        file.rename(currentName, paste(currentName, ".bak", sep=""))
       }
 
-      fd <- file(fileName, open="w")
+      fd <- file(currentName, open="w")
       prevSection <- ""
     }
 

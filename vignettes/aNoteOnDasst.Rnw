@@ -220,17 +220,18 @@ plot(TMAX ~ as.Date(as.character(DATE),format="%y%j"),
 
 This section gives a brief idea of the potential of \code{write.dssat} method for the edition of \textsc{dssat-csm} input files. Further details can be found in other vignette aimed at automatic calibration and optimization of `\textsc{dssat-csm}' input files.
 
-We will read the experimental file \texttt{SANT7001.MZX} and we will replace the fertilization doses. Because this file will be replaced, we make a copy on our working directory.
+We will read the experimental file \texttt{SANT7001.MZX} and we will replace the fertilization doses. Because this file will be replaced, we make a copy on a temporary directory.
 
 <<eval=TRUE,echo=TRUE>>=
 santfile <- system.file("extdata", "SANT7001.MZX", 
                         package="Dasst")
-file.copy(santfile, "SANT7001.MZX")
-sant <- read.dssat("SANT7001.MZX")
+ffn <- paste(tempdir(), "SANT7001.MZX", sep="/")
+file.copy(santfile, ffn)
+sant <- read.dssat(ffn)
 sant[[9]]
 sant[[9]][,"FAMN"] <- c(60,120)
 sant[[9]]
-write.dssat(sant)
+write.dssat(sant, ffn)
 @
 %options(digits=2)
 
