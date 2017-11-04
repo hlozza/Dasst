@@ -2,9 +2,7 @@ Dasst
 =====
 
 
-
-[![Travis-CI Build Status] (https://travis-ci.org/hlozza/Dasst.svg?branch=master)] (https://travis-ci.org/hlozza/Dasst)
-
+[![Travis Build Status](https://travis-ci.org/hlozza/Dasst.svg?branch=master)](https://travis-ci.org/hlozza/Dasst)
 
 
 `Dasst` provides methods and tools for reading, processing and writing 
