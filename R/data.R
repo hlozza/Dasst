@@ -1,6 +1,7 @@
 ##' An example of a Dasst object
 ##'
-##' An example of a Dasst object based DSSAT file PlantGro.OUT.
+##' An example of a \code{\linkS4class{Dasst}} object
+##' based on file PlantGro.OUT.
 ##' The originally data set can be found within package directory as
 ##' \file{extdata/PlantGro.OUT}.
 ##'

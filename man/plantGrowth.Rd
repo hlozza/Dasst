@@ -3,9 +3,10 @@
 \alias{plantGrowth}
 \title{An example of a Dasst object}
 \description{
-  An example of a Dasst object based DSSAT file
-  PlantGro.OUT. The originally data set can be found within
-  package directory as \file{extdata/PlantGro.OUT}.
+  An example of a \code{\linkS4class{Dasst}} object based
+  on file PlantGro.OUT. The originally data set can be
+  found within package directory as
+  \file{extdata/PlantGro.OUT}.
 }
 \details{
   \code{plantGrowth} contains the daily plant growth for 3
@@ -24,14 +25,12 @@
   with 100kg/ha of urea.
 }
 \examples{
-
 data(plantGrowth)
 plot(plantGrowth[[1]][,"DAP"],plantGrowth[[1]][,"LAID"])
 
 # Or
 
 plot(plantGrowth[[1]][,c("DAP","LAID")])
-
 }
 \seealso{
   \code{\linkS4class{Dasst}} for class definition and the

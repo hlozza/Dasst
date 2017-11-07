@@ -1,6 +1,6 @@
 Package: Dasst
-Version: 0.3.2
-Date: 2017-11-04
+Version: 0.3.3
+Date: 2017-11-05
 Title: Tools for Reading, Processing and Writing 'DSSAT' Files
 Authors@R: c(person("Homero", "Lozza", role = c("aut", "cre"),
     email = "homerolozza@gmail.com"))
@@ -9,7 +9,7 @@ Maintainer: Homero Lozza <homerolozza@gmail.com>
 Depends: R (>= 2.14.0) 
 Description: Provides methods for reading, displaying,
     processing and writing files originally arranged for
-    the 'DSSAT-CSM' fixed width format.  The 'DSSAT-CSM' 
+    the 'DSSAT-CSM' fixed width format. The 'DSSAT-CSM' 
     cropping system model is described at J.W. Jones,
     G. Hoogenboomb, C.H. Porter, K.J. Boote, W.D. Batchelor,
     L.A. Hunt, P.W. Wilkens, U. Singh, A.J. Gijsman, 

@@ -1,19 +1,19 @@
 \docType{package}
 \name{Dasst-package}
 \alias{Dasst-package}
-\title{Dasst: a package for reading, processing and writing DSSAT files}
+\title{Dasst: a package for reading, processing and writing DSSAT-style files}
 \description{
-  The \pkg{Dasst} (Dssat AS Simple Tables) package provides
-  methods for reading, processing and writing files
-  originally formatted for the DSSAT Crop Simulation
-  Models.
+  The \pkg{Dasst} (DSSAT-style AS Simple Tables) package
+  provides methods for reading, processing and writing
+  files originally formatted for the 'DSSAT-CSM' crop
+  simulation models.
 }
 \details{
   The \pkg{Dasst} package defines the
   \code{\linkS4class{Dasst}} class which enables to store
-  the data encoded for the DSSAT Crop Simulation Models as
-  an S4 object, both for the inputs and the outputs.
-  Several methods are available.
+  the data encoded for the 'DSSAT-CSM' crop simulation
+  models as an S4 object, both for the inputs and the
+  outputs. Several methods are available.
 }
 \author{
   Homero Lozza, \email{homerolozza@gmail.com}

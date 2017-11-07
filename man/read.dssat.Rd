@@ -1,6 +1,6 @@
 \name{read.dssat}
 \alias{read.dssat}
-\title{Read a DSSAT file into an object of class Dasst}
+\title{Read a DSSAT-style file into an object of class Dasst}
 \usage{
   read.dssat(fileVec, fieldVec = character(),
     keyVec = character())
@@ -20,7 +20,8 @@
 }
 \value{
   A \code{\linkS4class{Dasst}} object with the structure
-  and information originally saved in the DSSAT file.
+  and information originally saved in the file using
+  DSSAT-style format specifications.
 }
 \description{
   \code{read.dssat} reads the contents of a file or group

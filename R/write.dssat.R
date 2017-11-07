@@ -2,14 +2,15 @@
 ##'
 NULL
 
-##' Write to a DSSAT file from an object of class Dasst
+##' Write to a DSSAT-style file from an object of class Dasst
 ##'
 ##' \code{write.dssat} writes to a file the contents of
 ##' an object of class \code{\linkS4class{Dasst}}.
 ##'
 ##' This function writes to a file the contents of
 ##' an object of class \code{\linkS4class{Dasst}} 
-##' striving to maintain compatibility with the DSSAT file format.
+##' striving to maintain compatibility with the DSSAT-style format
+##' specifications.
 ##'
 ##' The \code{fnames} vector specifies the paths to the files
 ##' where data will be stored. Each table of the
@@ -18,14 +19,14 @@ NULL
 ##' length of the object, then the paths will be recycled
 ##' as necessary.
 ##'
-##' If \code{fnames} is not specified, the paths of the originally
-##' read files are used. First, the original files are saved appending
+##' If paths contain file names that already exist, first
+##' the original files are saved appending
 ##' a \file{.bak} extension. Then, the \code{\linkS4class{Dasst}}
 ##' object is saved using these paths. 
 ##'
 ##' @param object An object of class \code{\linkS4class{Dasst}}.
-##' @param fnames A character vector. An optional parameter
-##'  encoding the paths to the files where the contents of
+##' @param fnames A character vector. The paths to the files
+##'  where the contents of
 ##'  the object of class \code{\linkS4class{Dasst}} will be stored.
 ##'
 ##' @export
@@ -38,7 +39,7 @@ NULL
 ##' write.dssat(plantGrowth, ffn)
 ##'
 ##'
-write.dssat <- function(object, fnames=character()){
+write.dssat <- function(object, fnames){
 
   ## check object 
 
@@ -46,11 +47,37 @@ write.dssat <- function(object, fnames=character()){
     stop(deparse(substitute(object)), " is not of class Dasst.\n")
   }
 
-  fileNames <- object@fileNames
-  if(length(fnames)){
+  if(missing(fnames)){
+    stop("'fnames' is missing.\n")
+  }
+
+  if(length(fnames) == 0){
+    stop("Provide file paths as a non empty vector character.\n")
+  }
+
+  if(! is.character(fnames)){
+    stop("Provide file paths as a vector character.\n")
+  }
+
+  if(any(! vapply(fnames, nzchar, FALSE))){
+    stop("Provide file paths with non empty strings.\n")
+  }
+
+  fileNames <- fnames
+  if(length(fnames) > length(object)){
+
+    length(fileNames) <- length(object)
+    message("Advisory: Using the first ", length(object), " provided file paths.\n")
+    
+  }else if(length(fnames) < length(object)){
+    
     fileNames <- rep(fnames, length(object) %/% length(fnames) + 1)
     length(fileNames) <- length(object)
+    
+  }else{
+                                        # Nothing
   }
+
 
   currentName <- ""
   fd <- file()
@@ -68,7 +95,27 @@ write.dssat <- function(object, fnames=character()){
         file.rename(currentName, paste(currentName, ".bak", sep=""))
       }
 
-      fd <- file(currentName, open="w")
+      fd <- tryCatch(
+        {
+          file(currentName, open="w")
+        },
+        error=function(cond) {
+          message("Can not open '", currentName, "' for writing")
+          message(cond)
+          message()
+          return(NULL)
+        },
+        warning=function(cond) {
+          message("'", currentName, "' is not suited for writing")
+          message(cond)
+          message()
+          return(NULL)
+        }
+        )
+      if(is.null(fd)){
+        stop("Can not write to DSSAT-style file")
+      }
+
       prevSection <- ""
     }
 

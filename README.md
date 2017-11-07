@@ -7,10 +7,10 @@ Dasst
 
 `Dasst` provides methods and tools for reading, processing and writing 
 files complying with the `DSSAT-CSM` fixed width format. `Dasst` enables
-DSSAT-CSM AS Simple Tables. The DSSAT cropping system model is described
-at J.W. Jones, G. Hoogenboomb, C.H. Porter, K.J. Boote, W.D. Batchelor, 
-L.A. Hunt, P.W. Wilkens, U. Singh, A.J. Gijsman, J.T. Ritchie (2003) 
-<https://doi.org/10.1016/S1161-0301(02)00107-7>.
+DSSAT-style AS Simple Tables. The `DSSAT-CSM` cropping system model
+is described at J.W. Jones, G. Hoogenboomb, C.H. Porter, K.J. Boote,
+W.D. Batchelor, L.A. Hunt, P.W. Wilkens, U. Singh, A.J. Gijsman,
+J.T. Ritchie (2003) <https://doi.org/10.1016/S1161-0301(02)00107-7>.
 
 ## Installing the package
 

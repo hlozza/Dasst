@@ -2,7 +2,7 @@
 ##'
 NULL
 
-##' Read a DSSAT file into an object of class Dasst
+##' Read a DSSAT-style file into an object of class Dasst
 ##'
 ##' \code{read.dssat} reads the contents of a file or group of files
 ##' and stores the contents into
@@ -21,7 +21,8 @@ NULL
 ##'  If it is not specified, only sections satisfying
 ##'  this condition will be retrieved.
 ##' @return A \code{\linkS4class{Dasst}} object with the structure
-##'  and information originally saved in the DSSAT file.
+##'  and information originally saved in the file using DSSAT-style
+##'  format specifications.
 ##'
 ##' @export
 ##'
