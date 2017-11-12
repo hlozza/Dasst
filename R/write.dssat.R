@@ -59,19 +59,20 @@ write.dssat <- function(object, fnames){
     stop("Provide file paths as a vector character.\n")
   }
 
-  if(any(! vapply(fnames, nzchar, FALSE))){
+##Trim leading and trailing spaces
+  fileNames <- vapply(fnames, function(x) gsub("^\\s+|\\s+$", "", x), "", USE.NAMES = FALSE)
+  if(any(! vapply(fileNames, nzchar, FALSE))){
     stop("Provide file paths with non empty strings.\n")
   }
 
-  fileNames <- fnames
-  if(length(fnames) > length(object)){
+  if(length(fileNames) > length(object)){
 
     length(fileNames) <- length(object)
-    message("Advisory: Using the first ", length(object), " provided file paths.\n")
+    cat("Warning: Using the first ", length(object), " provided file paths.\n")
     
-  }else if(length(fnames) < length(object)){
+  }else if(length(fileNames) < length(object)){
     
-    fileNames <- rep(fnames, length(object) %/% length(fnames) + 1)
+    fileNames <- rep(fileNames, length(object) %/% length(fileNames) + 1)
     length(fileNames) <- length(object)
     
   }else{

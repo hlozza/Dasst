@@ -55,7 +55,7 @@ read.dssat <- function(fileVec, fieldVec=character(), keyVec=character()){
 
     ## Check if file exists
     if(!file.exists(fileName)){
-      cat("Error: ",fileName," does not exists.\n")
+      cat("Warning: ", fileName, " does not exists.\n")
       next
     }
 
