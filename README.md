@@ -3,6 +3,7 @@ Dasst
 
 
 [![Travis Build Status](https://travis-ci.org/hlozza/Dasst.svg?branch=master)](https://travis-ci.org/hlozza/Dasst)
+[![CRAN release](https://www.r-pkg.org/badges/version-last-release/Dasst)](https://cran.r-project.org/package=Dasst)
 
 
 `Dasst` provides methods and tools for reading, processing and writing 
