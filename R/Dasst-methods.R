@@ -686,7 +686,7 @@ setReplaceMethod(
                          stop("Columns ", paste(value[naCols], collapse=", "), "are not known.\n")
                        
                      } else if (is.null(dim(value)) && length(value) >= 1) {
-                       if (any(value != as.integer(value) || any(value < 1))) 
+                       if (any(value != as.integer(value)) || any(value < 1)) 
                          stop("Date columns should be positive integers.\n")
                        if (any(value > ncol(x@tables[[i]])))
                          stop("Value exceeds the number of columns: ", ncol(x@tables[[i]]), ".\n")
